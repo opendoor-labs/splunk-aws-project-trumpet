@@ -45,6 +45,8 @@ Once the template has finished deploying the template will output a url linking 
 
 Open the generated url to access the configuration site. Note: this site runs entirely local to your browser. Any information entered is not sent anywhere.
 
+If you are using Splunk Cloud, note that it does not allow changes via the api so Option 2 is currently the only way to deploy Trumpet.
+
 #### Option 2: Manual HTTP Event Collector (HEC) configuration template
 
 If using the manual HEC configuration version of the template, download the `no_auto_hec_conf_website_template.json` and deploy using the AWS CloudFormation console.
@@ -93,7 +95,7 @@ Create a token for each of the above sourcetypes that you would like to ingest i
 
 * ***aws:config***
     * **Name:** Enter a name of your choice
-    * **Enable indexer acknowledgement:** checked
+    * **Enable indexer acknowledgement:** un-checked
     * **Source type:** aws:config
     * **Index:** selection should align to options described [here](https://docs.splunk.com/Documentation/AWS/5.1.1/Installation/Macros)
     * **App Context:** splunk_httpinput (splunk_httpinput)
@@ -122,7 +124,7 @@ Create a token for each of the above sourcetypes that you would like to ingest i
 ## Troubleshooting
 - Check that each HEC token is enabled and that SSL is turned on
 - For the tokens associated with the aws:config:notification and aws:cloudtrail sourcetypes, indexer acknowledgement should be turned on. This can be confirmed in the Splunk GUI or in inputs.conf (The token stanza should have `useACK=1`)
-- Check the firehose settings in AWS. The listed HEC endpoint should have a valid SSL cert installed for the HEC port. Confirm the cert is valid by visiting `https://{{ endpoint }}:8088/services/collector/health`. If you do not get a security warning, SSL using a valid cert for HEC is correctly configured. Otherwise you need to use a valid cert or use an ELB intermediary to terminate SSL before forwarding to your HEC endpoint.
+- Check the firehose settings in AWS. The listed HEC endpoint should have a valid SSL cert installed for the HEC port. Confirm the cert is valid by visiting `https://{{ endpoint }}:{{port}}/services/collector/health`. If you do not get a security warning, SSL using a valid cert for HEC is correctly configured. Otherwise you need to use a valid cert or use an ELB intermediary to terminate SSL before forwarding to your HEC endpoint.
 - Enable CloudWatch logs on each Kinesis Firehose Delivery stream
 - In some cases, Trumpet will fail to deploy if AWS Config is misconfigured. Check that there are no iam permission/s3 bucket errors with your configuration recorder before deploying.
 - The aws:config sourcetype is populated by AWS Config snapshots. To check available delivery channels and snapshot delivery frequency settings run the below command.
