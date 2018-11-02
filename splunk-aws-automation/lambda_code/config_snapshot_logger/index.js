@@ -8,6 +8,7 @@
  *
  * 1. SPLUNK_HEC_URL: URL address for your Splunk HTTP event collector endpoint.
  * Default port for event collector is 8088. Example: https://host.com:8088/services/collector
+ * Default port for event collector on splunk cloud is 443.
  *
  * 2. SPLUNK_HEC_TOKEN: Token for your Splunk HTTP event collector.
  * To create a new token for this Lambda function, refer to Splunk Docs:
@@ -19,7 +20,7 @@
 'use strict';
 
 const loggerConfig = {
-    url: process.env.SPLUNK_HEC_URL.split(":").slice(0, 2).join(":") + ":8088/services/collector",
+    url: process.env.SPLUNK_HEC_URL + "/services/collector",
     token: process.env.SPLUNK_HEC_TOKEN,
     maxBatchCount: 0, // Manually flush events
     maxRetries: 3,    // Retry 3 times
